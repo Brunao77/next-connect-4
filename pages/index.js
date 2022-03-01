@@ -14,6 +14,21 @@ export default function Home() {
   const [player, setPlayer] = useState('X')
   const [win, setWin] = useState(false)
 
+  const repeat = (limit, isDisconnected, count, addSlotPosition, slot, won) => {
+    if (!limit && !isDisconnected && !won) {
+      slot += addSlotPosition
+      if (board[slot] === player) {
+        count++
+        won = count === 3
+      } else {
+        isDisconnected = true
+      }
+    } else {
+      isDisconnected = true
+    }
+    return { won, slot, isDisconnected, count }
+  }
+
   const checkWin = (index) => {
     let horizontalCount = 0,
       verticalCount = 0,
@@ -34,19 +49,64 @@ export default function Home() {
       isDisconnectdDiagonalRightDown = false,
       isDisconnectdDiagonalLeftUp = false,
       isDisconnectdDiagonalLeftDown = false,
-      win = false
-
+      won = false
     do {
+      const horizontalRightObject = repeat(
+        LIMITES[1].includes(checkSlotHorizontalRight),
+        isDisconnectedHorizontalRight,
+        horizontalCount,
+        1,
+        checkSlotHorizontalRight,
+        won
+      )
+      checkSlotHorizontalRight = horizontalRightObject.slot
+      isDisconnectedHorizontalRight = horizontalRightObject.isDisconnected
+      horizontalCount = horizontalRightObject.count
+      won = horizontalRightObject.won
+      const horizontalLeftObject = repeat(
+        LIMITES[0].includes(checkSlotHorizontalLeft),
+        isDisconnectedHorizontalLeft,
+        horizontalCount,
+        -1,
+        checkSlotHorizontalLeft,
+        won
+      )
+      checkSlotHorizontalLeft = horizontalLeftObject.slot
+      isDisconnectedHorizontalLeft = horizontalLeftObject.isDisconnected
+      horizontalCount = horizontalLeftObject.count
+      won = horizontalLeftObject.won
+      const verticalObject = repeat(
+        LIMITES[3].includes(checkSlotVertical),
+        isDisconnectedVertical,
+        verticalCount,
+        7,
+        checkSlotVertical,
+        won
+      )
+      checkSlotVertical = verticalObject.slot
+      isDisconnectedVertical = verticalObject.isDisconnected
+      verticalCount = verticalObject.count
+      won = verticalObject.won
+      won =
+        horizontalLeftObject.won ||
+        horizontalRightObject.won ||
+        verticalObject.won
+      finishCheck =
+        isDisconnectedHorizontalLeft &&
+        isDisconnectedHorizontalRight &&
+        isDisconnectedVertical
+    } while (!won && !finishCheck)
+    /* do {
       // HORIZONTAL RIGHT CHECK
       if (
         !LIMITES[1].includes(checkSlotHorizontalRight) &&
         !isDisconnectedHorizontalRight &&
-        !win
+        !won
       ) {
         checkSlotHorizontalRight++
         if (board[checkSlotHorizontalRight] === player) {
           horizontalCount++
-          win = horizontalCount === 3
+          won = horizontalCount === 3
         } else {
           isDisconnectedHorizontalRight = true
         }
@@ -56,13 +116,13 @@ export default function Home() {
       // HORIZONTAL LEFT CHECK
       if (
         !LIMITES[0].includes(checkSlotHorizontalLeft) &&
-        !win &&
+        !won &&
         !isDisconnectedHorizontalLeft
       ) {
         checkSlotHorizontalLeft--
         if (board[checkSlotHorizontalLeft] === player) {
           horizontalCount++
-          win = horizontalCount === 3
+          won = horizontalCount === 3
         } else {
           isDisconnectedHorizontalLeft = true
         }
@@ -72,13 +132,13 @@ export default function Home() {
       // VERTICAL
       if (
         !LIMITES[3].includes(checkSlotVertical) &&
-        !win &&
+        !won &&
         !isDisconnectedVertical
       ) {
         checkSlotVertical += 7
         if (board[checkSlotVertical] === player) {
           verticalCount++
-          win = verticalCount === 3
+          won = verticalCount === 3
         } else {
           isDisconnectedVertical = true
         }
@@ -92,12 +152,12 @@ export default function Home() {
           LIMITES[2].includes(checkSlotDiagonalRightUp)
         ) &&
         !isDisconnectdDiagonalRightUp &&
-        !win
+        !won
       ) {
         checkSlotDiagonalRightUp -= 6
         if (board[checkSlotDiagonalRightUp] === player) {
           diagonalRightCount++
-          win = diagonalRightCount === 3
+          won = diagonalRightCount === 3
         } else {
           isDisconnectdDiagonalRightUp = true
         }
@@ -110,13 +170,13 @@ export default function Home() {
           LIMITES[0].includes(checkSlotDiagonalRightDown) ||
           LIMITES[3].includes(checkSlotDiagonalRightDown)
         ) &&
-        !win &&
+        !won &&
         !isDisconnectdDiagonalRightDown
       ) {
         checkSlotDiagonalRightDown += 6
         if (board[checkSlotDiagonalRightDown] === player) {
           diagonalRightCount++
-          win = diagonalRightCount === 3
+          won = diagonalRightCount === 3
         } else {
           isDisconnectdDiagonalRightDown = true
         }
@@ -130,12 +190,12 @@ export default function Home() {
           LIMITES[2].includes(checkSlotDiagonalLeftUp)
         ) &&
         !isDisconnectdDiagonalLeftUp &&
-        !win
+        !won
       ) {
         checkSlotDiagonalLeftUp -= 8
         if (board[checkSlotDiagonalLeftUp] === player) {
           diagonalLeftCount++
-          win = diagonalLeftCount === 3
+          won = diagonalLeftCount === 3
         } else {
           isDisconnectdDiagonalLeftUp = true
         }
@@ -148,13 +208,13 @@ export default function Home() {
           LIMITES[1].includes(checkSlotDiagonalLeftDown) ||
           LIMITES[3].includes(checkSlotDiagonalLeftDown)
         ) &&
-        !win &&
+        !won &&
         !isDisconnectdDiagonalLeftDown
       ) {
         checkSlotDiagonalLeftDown += 8
         if (board[checkSlotDiagonalLeftDown] === player) {
           diagonalLeftCount++
-          win = diagonalLeftCount === 3
+          won = diagonalLeftCount === 3
         } else {
           isDisconnectdDiagonalLeftDown = true
         }
@@ -169,9 +229,9 @@ export default function Home() {
         isDisconnectdDiagonalRightDown &&
         isDisconnectdDiagonalLeftUp &&
         isDisconnectdDiagonalLeftDown
-    } while (!win && !finishCheck)
+    } while (!won && !finishCheck) */
 
-    setWin(win)
+    setWin(won)
   }
 
   const handleClick = (slotSelected) => {
