@@ -205,26 +205,41 @@ export default function Home() {
       <AppLayout>
         <section>
           {board.map((slot, index) => (
-            <div key={index} onClick={() => handleClick(index)}>
-              {slot}
-            </div>
+            <div
+              key={index}
+              className={slot === '' ? 'empty' : slot === 'X' ? 'blue' : 'red'}
+              onClick={() => handleClick(index)}
+            ></div>
           ))}
           {win && <h1>Winner</h1>}
         </section>
       </AppLayout>
       <style jsx>{`
         section {
+          background: #444444;
+          padding: 10px;
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           grid-gap: 10px;
+          border-radius: 10px;
         }
         div {
           width: 100px;
           height: 100px;
-          background: red;
           display: flex;
           justify-content: center;
           align-items: center;
+          border-radius: 999px;
+          margin: 5px;
+        }
+        .empty {
+          background: #e5e1e1;
+        }
+        .red {
+          background: #ff5b5b;
+        }
+        .blue {
+          background: #5b80ff;
         }
       `}</style>
     </>

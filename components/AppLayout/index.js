@@ -8,6 +8,9 @@ export const AppLayout = ({ children }) => {
         {`
           main {
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
           html,
           body {
