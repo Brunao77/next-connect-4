@@ -18,6 +18,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     'react/prop-types': 'off',
     'multiline-ternary': 'off',
-    indent: 'off'
+    indent: 'off',
+    'one-var': 'off'
   }
 }

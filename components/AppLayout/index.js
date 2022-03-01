@@ -11,6 +11,7 @@ export const AppLayout = ({ children }) => {
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
           }
           html,
           body {
